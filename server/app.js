@@ -4,6 +4,10 @@ const cors = require('cors');
 const massive = require('massive');
 const Sentry = require('@sentry/node');
 
+import validate from 'express-validation';
+
+import { validators } from './validators';
+
 import routes from './routes';
 
 function init() {
@@ -19,6 +23,9 @@ function init() {
     app.use(Sentry.Handlers.requestHandler());
     app.use(cors());
     app.use(bodyParser.json());
+
+    app.set('validate', validate);
+    app.set('validators', validators);
 
     massive({
       host: process.env.DB_HOST,
@@ -39,7 +46,7 @@ function init() {
       routes(app);
 
       if (environment === 'Development') {
-        app.get('/debug-sentry', function mainHandler(req, res) {
+        app.get('/debug-sentry', (req, res) => {
           throw new Error('ooga booga break the things');
         });
       }
