@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const massive = require('massive');
+const Sentry = require('@sentry/node');
 
 import routes from './routes';
 
@@ -10,7 +11,12 @@ function init() {
     // Create server instance
     const app = express();
 
+    const environment = process.env.ENVIRONMENT;
+
+    Sentry.init({ dsn: process.env.SENTRY_KEY, environment });
+
     // ==================== TOP-LEVEL MIDDLEWARE ==================== //
+    app.use(Sentry.Handlers.requestHandler());
     app.use(cors());
     app.use(bodyParser.json());
 
@@ -31,6 +37,14 @@ function init() {
       });
 
       routes(app);
+
+      if (environment === 'Development') {
+        app.get('/debug-sentry', function mainHandler(req, res) {
+          throw new Error('ooga booga break the things');
+        });
+      }
+
+      app.use(Sentry.Handlers.errorHandler());
 
       // ======================== START SERVER ======================== //
       if (!module.parent) {
