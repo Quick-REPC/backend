@@ -25,6 +25,10 @@ DB_USERNAME=String
 DB_PASSWORD=String
 DB_PORT=Number
 DB_DATABASE=String
+
+# SENTRY KEYS
+ENVIRONMENT=String
+SENTRY_KEY=String->URL
 ```
 
 ## Scripts
