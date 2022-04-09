@@ -50,7 +50,7 @@
     "joi-phone-number": "^3.1.1",
     "lodash": "^4.17.15",
     "massive": "^6.1.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "pg": "^7.12.1",
     "winston": "^3.2.1"
   },
